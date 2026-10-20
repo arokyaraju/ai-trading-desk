@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: trading_desk_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: desk_user
+      POSTGRES_PASSWORD: desk_secure_pass_2026
+      POSTGRES_DB: trading_desk
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U desk_user -d trading_desk"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  trading_desk:
+    build: .
+    container_name: ai_trading_desk_app
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://desk_user:desk_secure_pass_2026@postgres:5432/trading_desk
+      - FYERS_APP_ID=77WFZ67AWG-200
+      - FYERS_SECRET_KEY=PGLvsC6gLCFjJjA4
+      - SECRET_KEY=institution_grade_ai_desk_secret_token_2026
+      - RISK_PER_TRADE_INR=1000.0
+      - MIN_RISK_REWARD=1.5
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:

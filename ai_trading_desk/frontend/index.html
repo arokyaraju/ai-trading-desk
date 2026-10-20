@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Trading Desk — Institutional Multi-Agent System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Top Executive Bar -->
+  <header>
+    <div class="brand-section">
+      <div class="logo-badge">
+        <span>⚡</span> AI DESK
+      </div>
+      <div>
+        <div class="brand-title">Multi-Agent Trading Operation</div>
+        <div style="display:flex; gap:8px; align-items:center; margin-top:2px;">
+          <div class="system-status-indicator">
+            <span class="pulse-dot"></span>
+            <span id="ws-status">LIVE STREAM CONNECTED</span>
+          </div>
+          <span id="db-badge" class="bias-badge bias-bullish" style="font-size:10px;">DB: POSTGRESQL</span>
+          <span id="fyers-badge" class="bias-badge bias-neutral" style="font-size:10px;">FYERS GATEWAY</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Market Metrics -->
+    <div class="header-center-metrics">
+      <div class="metric-pill">
+        <span class="metric-label">Nifty 50</span>
+        <span id="nifty-price" class="metric-val" style="color:var(--accent-cyan)">₹24,850.00</span>
+      </div>
+      <div class="metric-pill">
+        <span class="metric-label">Macro Regime</span>
+        <span id="nifty-bias" class="bias-badge bias-neutral">NEUTRAL</span>
+      </div>
+      <div class="metric-pill" style="max-width:320px;">
+        <span class="metric-label">Structure Logic</span>
+        <span id="nifty-rationale" style="font-size:11px; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Evaluating daily pivot and opening range...</span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="header-actions">
+      <button id="btn-run-cycle" class="btn btn-primary" onclick="triggerMarketCycle()">Run Market Cycle</button>
+      <button id="btn-open-record" class="btn btn-record">+ Record Real Trade</button>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="desk-nav">
+    <button class="tab-btn active" data-tab="tab-command">Command Center & Shortlist</button>
+    <button class="tab-btn" data-tab="tab-agents">The 11 Agent Matrix</button>
+    <button class="tab-btn" data-tab="tab-observer">Live Observer & Trailing Stops</button>
+    <button class="tab-btn" data-tab="tab-real-trades">Real Trades Journal</button>
+    <button class="tab-btn" data-tab="tab-journal">Daily Journal & EOD Report</button>
+    <button class="tab-btn" data-tab="tab-research">Research Analyst (Agent #11)</button>
+    <button class="tab-btn" data-tab="tab-mcp">Internal MCP Inspector</button>
+  </nav>
+
+  <!-- Main Content Areas -->
+  <main class="desk-content">
+
+    <!-- Tab 1: Command Center & Shortlist -->
+    <section id="tab-command" class="tab-pane active">
+      <div class="grid-2col">
+        <!-- Left: Manager Ranked Trading Shortlist -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Manager Ranked Trading Shortlist</div>
+              <div class="card-subtitle">5-Gate Scoring: Nifty (25%), Sector (20%), Stock (20%), Setup (20%), Risk (15%)</div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="desk-table">
+              <thead>
+                <tr>
+                  <th>Symbol</th>
+                  <th>Dir</th>
+                  <th>Setup Archetype</th>
+                  <th>Score</th>
+                  <th>Status</th>
+                  <th>Manager Verification / Disagreement</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="candidates-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Right: Sector Radar Snapshot -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Sector Radar (Agent #1)</div>
+              <div class="card-subtitle">Performance %, Relative Strength vs Nifty & Momentum</div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="desk-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Sector</th>
+                  <th>Price</th>
+                  <th>Chg %</th>
+                  <th>Mom</th>
+                  <th>Bias</th>
+                </tr>
+              </thead>
+              <tbody id="sectors-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 2: The 11 Agent Matrix -->
+    <section id="tab-agents" class="tab-pane">
+      <div class="grid-agents">
+        <!-- Agent 1 -->
+        <div class="card agent-card">
+          <div class="agent-header">
+            <span class="agent-name">Sector Radar</span>
+            <span class="agent-num-badge">AGENT 1</span>
+          </div>
+          <div class="agent-rule-text">Ranks sector performance and relative strength vs Nifty 50. Classifies sectors into Bullish, Bearish, or Neutral.</div>
+          <div class="agent-stats"><span>Status: ACTIVE</span><span>Timeframe: 5M / 15M</span></div>
+        </div>
+
+        <!-- Agent 2 -->
+        <div class="card agent-card">
+          <div class="agent-header">
+            <span class="agent-name">Sector Leaders</span>
+            <span class="agent-num-badge">AGENT 2</span>
+          </div>
+          <div class="agent-rule-text">Isolates top 2 strongest stocks in leading sectors and top 2 weakest stocks in lagging sectors.</div>
+          <div class="agent-stats"><span>Status: ACTIVE</span><span>Universe: NSE F&O</span></div>
+        </div>
+
+        <!-- Agent 3 -->
+        <div class="card agent-card">
+          <div class="agent-header">
+            <span class="agent-name">Nifty Bias</span>
+            <span class="agent-num-badge">AGENT 3</span>
+          </div>
+          <div class="agent-rule-text">Evaluates Nifty versus Daily Pivot, Previous Close, and 15-minute Opening Range. Never forces direction.</div>
+          <div class="agent-stats"><span>Status: ACTIVE</span><span>Benchmark: Nifty 50</span></div>
+        </div>
+
+        <!-- Agent 4 -->
+        <div class="card agent-card">
+          <div class="agent-header">
+            <span class="agent-name">Sector Reversal</span>
+            <span class="agent-num-badge">AGENT 4</span>
+          </div>
+          <div class="agent-rule-text">Monitors sector transitions reclaiming or losing Daily Pivot and Previous Close in both directions.</div>
+          <div class="agent-stats"><span>Status: ACTIVE</span><span>Mode: Transition</span></div>
+        </div>
+
+        <!-- Agent 5 -->
+        <div class="card agent-card">
+          <div class="agent-header">
+            <span class="agent-name">Stock Confirmation</span>
+            <span class="agent-num-badge">AGENT 5</span>
+          </div>
+          <div class="agent-rule-text">Checks if individual constituent stocks confirm their parent sector's reclaim or breakdown.</div>
+          <div class="agent-stats"><span>Status: ACTIVE</span><span>Filter: Confluence</span></div>
+        </div>
+
+        <!-- Agent 6 -->
+        <div class="card agent-card">
+          <div class="agent-header">
+            <span class="agent-name">Previous-Day Levels</span>
+            <span class="agent-num-badge">AGENT 6</span>
+          </div>
+          <div class="agent-rule-text">Anti-Trap Golden Rule: Sell on top PDH failures (Close < DP & PDC), Buy at the low PDL recoveries (Close > DP & PDC).</div>
+          <div class="agent-stats"><span>Status: ACTIVE</span><span>Timeframe: 1-Hour</span></div>
+        </div>
+
+        <!-- Agent 7 -->
+        <div class="card agent-card">
+          <div class="agent-header">
+            <span class="agent-name">Previous-Week Levels</span>
+            <span class="agent-num-badge">AGENT 7</span>
+          </div>
+          <div class="agent-rule-text">Hourly rejection at PWH/PWL. Candle close confirmation strictly below/above Weekly Pivot.</div>
+          <div class="agent-stats"><span>Status: ACTIVE</span><span>Timeframe: 1-Hour</span></div>
+        </div>
+
+        <!-- Agent 8 -->
+        <div class="card agent-card">
+          <div class="agent-header">
+            <span class="agent-name">Risk Officer</span>
+            <span class="agent-num-badge">AGENT 8</span>
+          </div>
+          <div class="agent-rule-text">Calculates quantity = floor(Risk Budget / R). Builds 1R-6R ladder. Requires R:R >= 1.5 at T2. Rejects bad stops.</div>
+          <div class="agent-stats"><span>Status: ACTIVE</span><span>Governance: Strict</span></div>
+        </div>
+
+        <!-- Agent 9 -->
+        <div class="card agent-card">
+          <div class="agent-header">
+            <span class="agent-name">Trade Journal</span>
+            <span class="agent-num-badge">AGENT 9</span>
+          </div>
+          <div class="agent-rule-text">Maintains permanent audit log of every signal, decision, stop modification, and market regime event.</div>
+          <div class="agent-stats"><span>Status: ACTIVE</span><span>Memory: PostgreSQL</span></div>
+        </div>
+
+        <!-- Agent 10 -->
+        <div class="card agent-card">
+          <div class="agent-header">
+            <span class="agent-name">Trade Observer</span>
+            <span class="agent-num-badge">AGENT 10</span>
+          </div>
+          <div class="agent-rule-text">Automated trailing stops: at +2R move to BE, at +3R move to +1R, at +4R move to +2R. Never loosens stops.</div>
+          <div class="agent-stats"><span>Status: ACTIVE</span><span>Ladder: 1R to 6R</span></div>
+        </div>
+
+        <!-- Agent 11 -->
+        <div class="card agent-card">
+          <div class="agent-header">
+            <span class="agent-name">Research Analyst</span>
+            <span class="agent-num-badge">AGENT 11</span>
+          </div>
+          <div class="agent-rule-text">Studies win rates, sample sizes (N>=30), expectancy, and drawdown. Proposes evidence-based improvements.</div>
+          <div class="agent-stats"><span>Status: ACTIVE</span><span>Threshold: 80% Win</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 3: Live Observer & Trailing Stops -->
+    <section id="tab-observer" class="tab-pane">
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header">
+          <div class="card-title">Institutional Trailing-Stop Protocol</div>
+          <div class="bias-badge bias-bullish">Deterministic Ratchet</div>
+        </div>
+        <p style="font-size:13px; color:var(--text-muted);">
+          At +2R: Move Stop to Entry (Breakeven) &bull; At +3R: Move Stop to +1R &bull; At +4R, +5R, +6R: Trail one R behind confirmed milestone.
+          <strong style="color:var(--accent-rose)">Rule: Never loosen a stop after tightening.</strong>
+        </p>
+      </div>
+      <div id="plans-container" class="grid-3col">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- Tab 4: Real Trades Journal -->
+    <section id="tab-real-trades" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Manually Recorded Real Trades</div>
+            <div class="card-subtitle">Realized broker fills, actual execution prices, slippage, and net P&L after costs</div>
+          </div>
+          <button class="btn btn-record" onclick="document.getElementById('record-trade-modal').classList.add('open')">+ Log Real Trade</button>
+        </div>
+        <div class="table-responsive">
+          <table class="desk-table">
+            <thead>
+              <tr>
+                <th>Trade ID</th>
+                <th>Symbol</th>
+                <th>Direction</th>
+                <th>Fill Price</th>
+                <th>Qty</th>
+                <th>Current SL</th>
+                <th>Realized P&L</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="real-trades-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 5: Daily Journal & EOD Report -->
+    <section id="tab-journal" class="tab-pane">
+      <div id="journal-container">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- Tab 6: Research Analyst (Agent #11) -->
+    <section id="tab-research" class="tab-pane">
+      <div id="research-content">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- Tab 7: Internal MCP Inspector -->
+    <section id="tab-mcp" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Model Context Protocol (MCP) Server Tools</div>
+          <div class="bias-badge bias-bullish">Private Endpoint</div>
+        </div>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
+          Standard connectors allowing AI assistants to query real-time market regime, ranked candidates, and active observer states.
+        </p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+          <button class="btn btn-secondary" onclick="testMcpTool('get_market_regime')">get_market_regime</button>
+          <button class="btn btn-secondary" onclick="testMcpTool('get_sector_rankings')">get_sector_rankings</button>
+          <button class="btn btn-secondary" onclick="testMcpTool('get_trade_candidates')">get_trade_candidates</button>
+          <button class="btn btn-secondary" onclick="testMcpTool('get_open_trade_status')">get_open_trade_status</button>
+          <button class="btn btn-secondary" onclick="testMcpTool('get_journal_summary')">get_journal_summary</button>
+          <button class="btn btn-secondary" onclick="testMcpTool('get_research_findings')">get_research_findings</button>
+        </div>
+        <pre id="mcp-output" style="background:#050811; padding:16px; border-radius:8px; border:1px solid var(--border-subtle); color:var(--accent-cyan); font-family:var(--font-mono); font-size:12px; max-height:400px; overflow-y:auto;">Click an MCP tool button above to test execution.</pre>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal: Record Real Trade -->
+  <div id="record-trade-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Record Real Trade Execution</div>
+        <button id="btn-close-modal" class="close-btn">&times;</button>
+      </div>
+      <form id="record-trade-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Symbol (e.g. RELIANCE)</label>
+            <input type="text" id="inp-sym" class="form-control" required placeholder="HDFCBANK">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Direction</label>
+            <select id="inp-dir" class="form-control">
+              <option value="BUY">BUY / LONG</option>
+              <option value="SELL">SELL / SHORT</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Actual Fill Price (₹)</label>
+            <input type="number" step="0.05" id="inp-entry" class="form-control" required placeholder="1650.00">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Quantity</label>
+            <input type="number" id="inp-qty" class="form-control" required placeholder="50">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Initial Stop Loss (₹)</label>
+            <input type="number" step="0.05" id="inp-sl" class="form-control" required placeholder="1635.00">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Broker Order ID</label>
+            <input type="text" id="inp-order-id" class="form-control" placeholder="241020000123">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Trade Notes / Strategy Setup</label>
+          <input type="text" id="inp-notes" class="form-control" placeholder="PDL Recovery + Nifty Reclaim">
+        </div>
+
+        <button type="submit" class="btn btn-record" style="width:100%; justify-content:center; margin-top:8px;">Save to Permanent Journal</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div>AI Trading Desk v1.0.0 &bull; Institutional Multi-Agent Framework</div>
+    <div>Zero Direct Autonomous Orders &bull; Fully Auditable Event Memory</div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
